@@ -1,6 +1,5 @@
-* {
+*{
     transform-style: preserve-3d;
-    box-sizing: border-box;
 }
 #viewport { 
     width: 600px;
@@ -14,7 +13,27 @@
     height: 0px;
     position: relative;
     left: 200px;
-    top: 200px;
-    animation: rotate 3s linear infinite;
+    top: 150px;
+}
+#scene-wrapper {
+    width: 4000px;
+    height: 4500px;
+    transform-origin: 0 0;
+    transition: transform .4s;
     transform: rotateX(80deg);
+}
+
+#scene {
+    width: 4000px; height: 4000px; 
+    transform-origin: 0 0;
+
+}
+
+@keyframes opening-perspective {
+    from {
+        transform: rotateX(0deg);
+    }
+    to {
+        transform: rotateX(80deg);
+    }
 }
