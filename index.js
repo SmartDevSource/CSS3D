@@ -4,8 +4,21 @@ const camera = document.getElementById('camera')
 const tree = document.getElementById('tree')
 const tree2 = document.getElementById('tree2')
 
-const rotation = {x: 0, y: 0, z: 0}
-const position = {x: 0, y: 0, z: 10}
+const mouse = {
+    x: 0,
+    y: 0,
+    sens: .01
+}
+const rotation = {
+    x: 0,
+    y: 0,
+    z: 0
+}
+const position = {
+    x: 0,
+    y: 0,
+    z: 10
+}
 const speeds = {
     rotate: .05,
     move: .1,
@@ -22,27 +35,39 @@ const actions = {
     down_move: false
 }
 
-window.addEventListener('keydown', e => {
-    switch(e.key.toLowerCase()){
-        case 'q': actions.rotate_left = true; break
-        case 'd': actions.rotate_right = true; break
-        case 'z': actions.forward_move = true; break
-        case 's': actions.backward_move = true; break
-        case '+': actions.up_move = true; break
-        case '-': actions.down_move = true; break
-    }
-})
-
-window.addEventListener('keyup', e => {
-    switch(e.key.toLowerCase()){
-        case 'q': actions.rotate_left = false; break
-        case 'd': actions.rotate_right = false; break
-        case 'z': actions.forward_move = false; break
-        case 's': actions.backward_move = false; break
-        case '+': actions.up_move = false; break
-        case '-': actions.down_move = false; break
-    }
-})
+const initListeners = () => {
+    window.addEventListener('click', () => {
+        scene.requestPointerLock()
+    })
+    window.addEventListener('keydown', e => {
+        switch(e.key.toLowerCase()){
+            case 'q': actions.rotate_left = true; break
+            case 'd': actions.rotate_right = true; break
+            case 'z': actions.forward_move = true; break
+            case 's': actions.backward_move = true; break
+            case '+': actions.up_move = true; break
+            case '-': actions.down_move = true; break
+        }
+    })
+    window.addEventListener('keyup', e => {
+        switch(e.key.toLowerCase()){
+            case 'q': actions.rotate_left = false; break
+            case 'd': actions.rotate_right = false; break
+            case 'z': actions.forward_move = false; break
+            case 's': actions.backward_move = false; break
+            case '+': actions.up_move = false; break
+            case '-': actions.down_move = false; break
+        }
+    })
+    document.addEventListener('mousemove', e => {
+        if (document.pointerLockElement === scene){
+            const speed_x = e.movementX * mouse.sens
+            const speed_y = e.movementY * mouse.sens
+            rotation.z -= speed_x
+            rotation.x -= speed_y
+        }
+    })
+}
 
 const move = () => {
     if (actions.rotate_left) rotation.z += speeds.rotate
@@ -61,12 +86,12 @@ const move = () => {
     position.y += speeds.move * Math.cos(rotation.z)
 
     scene.style.transform = `
-            rotateX(-25deg)
-
+        rotateX(${rotation.x}rad)
         rotateZ(${rotation.z}rad)
         translateX(${position.x}px)
         translateY(${position.y}px)
         translateZ(${position.z}px)
+
     `
 
     scene_wrapper.style.transform = `
@@ -77,6 +102,7 @@ const move = () => {
         rotateZ(${-rotation.z}rad)
         rotateX(-90deg)
     `
+
     tree2.style.transform = `
         rotateZ(${-rotation.z}rad)
         rotateX(-90deg)
@@ -88,4 +114,5 @@ const loop = () => {
     move()
 }
 
+initListeners()
 loop()
