@@ -1,5 +1,6 @@
 const scene = document.getElementById('scene')
 const camera = document.getElementById('camera')
+const tree = document.getElementById('tree')
 
 const euler = {x: 0, y: 0, z: 0}
 const position = {x: 0, y: 0, z: 10}
@@ -62,6 +63,11 @@ const move = () => {
         translateX(${position.x}px)
         translateY(${position.y}px)
         translateZ(${position.z}px)
+    `
+
+    tree.style.transform = `
+        rotateZ(${-euler.z}rad)
+        rotateX(-90deg)
     `
 }
 

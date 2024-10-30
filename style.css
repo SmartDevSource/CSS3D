@@ -6,7 +6,7 @@
     width: 600px;
     height: 400px;
     overflow: hidden;
-    perspective: 400px;
+    perspective: 500px;
     background-color: rgb(60, 60, 60);
 }
 #camera { 
@@ -20,6 +20,13 @@
     transform: rotateX(90deg);
 }
 #scene {
+}
+#tree-wrapper {
+    position: absolute;
+    transform: translateZ(20px);
+}
+#tree {
+    width: 50px;
 }
 
 @keyframes opening-perspective {
