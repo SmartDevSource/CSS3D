@@ -12,12 +12,12 @@
 #camera { 
     position: relative;
     left: 0px;
-    top: 150px;
+    top: 270px;
 }
 #scene-wrapper {
     transform-origin: 0 0;
     transition: transform .4s;
-    transform: rotateX(80deg);
+    transform: rotateX(90deg);
 }
 #scene {
 }
