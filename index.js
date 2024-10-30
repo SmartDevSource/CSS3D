@@ -65,6 +65,8 @@ const initListeners = () => {
             const speed_y = e.movementY * mouse.sens
             rotation.z -= speed_x
             rotation.x -= speed_y
+            // position.y -= speed_y * 30
+            // position.z -= speed_y * 30
         }
     })
 }
@@ -85,6 +87,12 @@ const move = () => {
     position.x += speeds.move * Math.sin(rotation.z)
     position.y += speeds.move * Math.cos(rotation.z)
 
+    console.log("position.z :", position.z)
+
+    const offset_y = Math.abs(Math.cos(rotation.z) * 50)
+
+    console.log(offset_y)
+
     scene.style.transform = `
         rotateX(${rotation.x}rad)
         rotateZ(${rotation.z}rad)
@@ -93,9 +101,9 @@ const move = () => {
         translateZ(${position.z}px)
 
     `
-
     scene_wrapper.style.transform = `
         rotateX(90deg)
+        translateZ(${offset_y}px)
     `
 
     tree.style.transform = `
