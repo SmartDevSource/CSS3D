@@ -2,6 +2,11 @@
     transform-style: preserve-3d;
     box-sizing: border-box;
 }
+#hud {
+    position: absolute;
+    z-index: 99999;
+    user-select: none;
+}
 #viewport { 
     width: 600px;
     height: 400px;
