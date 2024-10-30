@@ -1,5 +1,6 @@
 *{
     transform-style: preserve-3d;
+    box-sizing: border-box;
 }
 #viewport { 
     width: 600px;
@@ -9,24 +10,16 @@
     background-color: rgb(60, 60, 60);
 }
 #camera { 
-    width: 0px;
-    height: 0px;
     position: relative;
-    left: 200px;
+    left: 0px;
     top: 150px;
 }
 #scene-wrapper {
-    width: 4000px;
-    height: 4500px;
     transform-origin: 0 0;
     transition: transform .4s;
     transform: rotateX(80deg);
 }
-
 #scene {
-    width: 4000px; height: 4000px; 
-    transform-origin: 0 0;
-
 }
 
 @keyframes opening-perspective {
