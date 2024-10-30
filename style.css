@@ -1,17 +1,22 @@
-*{
+* {
     transform-style: preserve-3d;
-    box-sizing: border-box;
 }
-body{
+body {
     display: flex;
     justify-content: center;
     margin-top: 100px;
     background-color: rgb(46, 46, 46);
 }
 #hud {
-    position: absolute;
-    z-index: 99999;
+    position: fixed;
+    z-index: 1000;
     user-select: none;
+    outline: 3px double rgb(255, 255, 255);
+    color: white;
+    margin: 5px;
+    line-height: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 #viewport { 
     width: 800px;
@@ -27,7 +32,6 @@ body{
 }
 #scene-wrapper {
     transform-origin: 0 0;
-    transition: transform .4s;
 }
 #tree-wrapper {
     position: absolute;
@@ -37,18 +41,6 @@ body{
     position: absolute;
     transform: translateY(-200px) translateZ(17px);
 }
-#tree {
+#tree, #tree2 {
     width: 50px;
-}
-#tree2 {
-    width: 50px;
-}
-
-@keyframes opening-perspective {
-    from {
-        transform: rotateX(0deg);
-    }
-    to {
-        transform: rotateX(80deg);
-    }
 }

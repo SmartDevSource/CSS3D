@@ -1,6 +1,7 @@
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
 const camera = document.getElementById('camera')
+const hud = document.getElementById('hud')
 const tree = document.getElementById('tree')
 const tree2 = document.getElementById('tree2')
 
@@ -17,7 +18,7 @@ const rotation = {
 const position = {
     x: 0,
     y: 0,
-    z: 10
+    z: -10
 }
 const speeds = {
     rotate: .05,
@@ -68,8 +69,6 @@ const initListeners = () => {
             const speed_y = e.movementY * mouse.sens
             rotation.z -= speed_x
             rotation.x -= speed_y
-            // position.y -= speed_y * 30
-            // position.z -= speed_y * 30
         }
     })
 }
@@ -106,7 +105,7 @@ const move = () => {
 
     `
     scene_wrapper.style.transform = `
-        rotateX(80deg)
+        rotateX(85deg)
     `
 
     tree.style.transform = `
@@ -117,6 +116,15 @@ const move = () => {
     tree2.style.transform = `
         rotateZ(${-rotation.z}rad)
         rotateX(-90deg)
+    `
+
+    hud.innerHTML = `
+        <p>position.x : ${position.x.toFixed(3)}</p>
+        <p>position.y : ${position.y.toFixed(3)}</p>
+        <p>position.z : ${position.z.toFixed(3)}</p>
+        <p>rotation.x : ${rotation.x.toFixed(3)}</p>
+        <p>rotation.y : ${rotation.y.toFixed(3)}</p>
+        <p>rotation.z : ${rotation.z.toFixed(3)}</p>
     `
 }
 
