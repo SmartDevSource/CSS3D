@@ -2,7 +2,7 @@ const scene = document.getElementById('scene')
 const camera = document.getElementById('camera')
 const tree = document.getElementById('tree')
 
-const euler = {x: 0, y: 0, z: 0}
+const rotation = {x: 0, y: 0, z: 0}
 const position = {x: 0, y: 0, z: 10}
 const speeds = {
     rotate: .05,
@@ -43,8 +43,8 @@ window.addEventListener('keyup', e => {
 })
 
 const move = () => {
-    if (actions.rotate_left) euler.z += speeds.rotate
-    if (actions.rotate_right) euler.z -= speeds.rotate
+    if (actions.rotate_left) rotation.z += speeds.rotate
+    if (actions.rotate_right) rotation.z -= speeds.rotate
     if (actions.forward_move) speeds.move < speeds.max_move ? speeds.move += speeds.accel_move : speeds.max_move
     if (actions.backward_move) speeds.move > -speeds.max_move ? speeds.move -= speeds.accel_move : -speeds.max_move
     if (!actions.forward_move && !actions.backward_move){
@@ -55,18 +55,18 @@ const move = () => {
     if (actions.up_move) position.z -= speeds.vertical
     if (actions.down_move) position.z += speeds.vertical
 
-    position.x += speeds.move * Math.sin(euler.z)
-    position.y += speeds.move * Math.cos(euler.z)
+    position.x += speeds.move * Math.sin(rotation.z)
+    position.y += speeds.move * Math.cos(rotation.z)
 
     scene.style.transform = `
-        rotateZ(${euler.z}rad)
+        rotateZ(${rotation.z}rad)
         translateX(${position.x}px)
         translateY(${position.y}px)
         translateZ(${position.z}px)
     `
 
     tree.style.transform = `
-        rotateZ(${-euler.z}rad)
+        rotateZ(${-rotation.z}rad)
         rotateX(-90deg)
     `
 }
