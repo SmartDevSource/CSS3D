@@ -1,6 +1,8 @@
 const scene = document.getElementById('scene')
+const scene_wrapper = document.getElementById('scene-wrapper')
 const camera = document.getElementById('camera')
 const tree = document.getElementById('tree')
+const tree2 = document.getElementById('tree2')
 
 const rotation = {x: 0, y: 0, z: 0}
 const position = {x: 0, y: 0, z: 10}
@@ -59,13 +61,23 @@ const move = () => {
     position.y += speeds.move * Math.cos(rotation.z)
 
     scene.style.transform = `
+            rotateX(-25deg)
+
         rotateZ(${rotation.z}rad)
         translateX(${position.x}px)
         translateY(${position.y}px)
         translateZ(${position.z}px)
     `
 
+    scene_wrapper.style.transform = `
+        rotateX(90deg)
+    `
+
     tree.style.transform = `
+        rotateZ(${-rotation.z}rad)
+        rotateX(-90deg)
+    `
+    tree2.style.transform = `
         rotateZ(${-rotation.z}rad)
         rotateX(-90deg)
     `

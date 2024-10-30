@@ -17,15 +17,19 @@
 #scene-wrapper {
     transform-origin: 0 0;
     transition: transform .4s;
-    transform: rotateX(90deg);
-}
-#scene {
 }
 #tree-wrapper {
     position: absolute;
-    transform: translateZ(20px);
+    transform: translateY(-100px) translateZ(17px);
+}
+#tree-wrapper-2 {
+    position: absolute;
+    transform: translateY(-200px) translateZ(17px);
 }
 #tree {
+    width: 50px;
+}
+#tree2 {
     width: 50px;
 }
 
