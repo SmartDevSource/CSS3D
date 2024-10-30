@@ -22,6 +22,7 @@ const position = {
 const speeds = {
     rotate: .05,
     move: .1,
+    lateral: .1,
     max_move: 3,
     accel_move: .1,
     vertical: 1
@@ -29,6 +30,8 @@ const speeds = {
 const actions = {
     rotate_left: false,
     rotate_right: false,
+    left_move: false,
+    right_move: false,
     forward_move: false,
     backward_move: false,
     up_move: false,
@@ -41,8 +44,8 @@ const initListeners = () => {
     })
     window.addEventListener('keydown', e => {
         switch(e.key.toLowerCase()){
-            case 'q': actions.rotate_left = true; break
-            case 'd': actions.rotate_right = true; break
+            case 'q': actions.left_move = true; break
+            case 'd': actions.right_move = true; break
             case 'z': actions.forward_move = true; break
             case 's': actions.backward_move = true; break
             case '+': actions.up_move = true; break
@@ -51,8 +54,8 @@ const initListeners = () => {
     })
     window.addEventListener('keyup', e => {
         switch(e.key.toLowerCase()){
-            case 'q': actions.rotate_left = false; break
-            case 'd': actions.rotate_right = false; break
+            case 'q': actions.left_move = false; break
+            case 'd': actions.right_move = false; break
             case 'z': actions.forward_move = false; break
             case 's': actions.backward_move = false; break
             case '+': actions.up_move = false; break
@@ -72,26 +75,27 @@ const initListeners = () => {
 }
 
 const move = () => {
-    if (actions.rotate_left) rotation.z += speeds.rotate
-    if (actions.rotate_right) rotation.z -= speeds.rotate
     if (actions.forward_move) speeds.move < speeds.max_move ? speeds.move += speeds.accel_move : speeds.max_move
     if (actions.backward_move) speeds.move > -speeds.max_move ? speeds.move -= speeds.accel_move : -speeds.max_move
+    if (actions.left_move) speeds.lateral < speeds.max_move ? speeds.lateral += speeds.accel_move : speeds.max_move
+    if (actions.right_move) speeds.lateral > -speeds.max_move ? speeds.lateral -= speeds.accel_move : -speeds.max_move
+
     if (!actions.forward_move && !actions.backward_move){
         if (speeds.move > 0) speeds.move -= speeds.accel_move
         if (speeds.move < 0) speeds.move += speeds.accel_move
         if (Math.abs(speeds.move) <= speeds.accel_move) speeds.move = 0
     }
+    if (!actions.left_move && !actions.right_move){
+        if (speeds.lateral > 0) speeds.lateral -= speeds.accel_move
+        if (speeds.lateral < 0) speeds.lateral += speeds.accel_move
+        if (Math.abs(speeds.lateral) <= speeds.accel_move) speeds.lateral = 0
+    }
+
     if (actions.up_move) position.z -= speeds.vertical
     if (actions.down_move) position.z += speeds.vertical
 
-    position.x += speeds.move * Math.sin(rotation.z)
-    position.y += speeds.move * Math.cos(rotation.z)
-
-    console.log("position.z :", position.z)
-
-    const offset_y = Math.abs(Math.cos(rotation.z) * 50)
-
-    console.log(offset_y)
+    position.x += speeds.move * Math.sin(rotation.z) + speeds.lateral * Math.cos(rotation.z)
+    position.y += speeds.move * Math.cos(rotation.z) - speeds.lateral * Math.sin(rotation.z)
 
     scene.style.transform = `
         rotateX(${rotation.x}rad)
@@ -102,8 +106,7 @@ const move = () => {
 
     `
     scene_wrapper.style.transform = `
-        rotateX(90deg)
-        translateZ(${offset_y}px)
+        rotateX(80deg)
     `
 
     tree.style.transform = `
