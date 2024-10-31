@@ -1,4 +1,5 @@
-import { mouse, rotation, position, speeds, actions } from './vars.js'
+import { mouse, rotation, position, 
+        velocities, actions, jump } from './vars.js'
 
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
@@ -17,8 +18,9 @@ const initListeners = () => {
             case 'd': actions.right_move = true; break
             case 'z': actions.forward_move = true; break
             case 's': actions.backward_move = true; break
-            case ' ': actions.up_move = true; break
-            case 'control': actions.down_move = true; break
+            case '+': actions.up_move = true; break
+            case '-': actions.down_move = true; break
+            case ' ': handleJumpEvent(); break
         }
     })
     window.addEventListener('keyup', e => {
@@ -27,8 +29,9 @@ const initListeners = () => {
             case 'd': actions.right_move = false; break
             case 'z': actions.forward_move = false; break
             case 's': actions.backward_move = false; break
-            case ' ': actions.up_move = false; break
-            case 'control': actions.down_move = false; break
+            case '+': actions.up_move = false; break
+            case '-': actions.down_move = false; break
+            case ' ': jump.is_active = false; break
         }
     })
     document.addEventListener('mousemove', e => {
@@ -46,28 +49,50 @@ const initListeners = () => {
     })
 }
 
+const handleJumpEvent = () => {
+    if (jump.state === 'idle' && !jump.is_active){
+        jump.state = 'ascending'
+        jump.is_active = true
+    } 
+}
+
 const updatePosition = () => {
-    if (actions.forward_move) speeds.move < speeds.max_move ? speeds.move += speeds.accel_move : speeds.max_move
-    if (actions.backward_move) speeds.move > -speeds.max_move ? speeds.move -= speeds.accel_move : -speeds.max_move
-    if (actions.left_move) speeds.lateral < speeds.max_move ? speeds.lateral += speeds.accel_move : speeds.max_move
-    if (actions.right_move) speeds.lateral > -speeds.max_move ? speeds.lateral -= speeds.accel_move : -speeds.max_move
+    if (actions.forward_move) velocities.move < velocities.max_move ? velocities.move += velocities.accel : velocities.max_move
+    if (actions.backward_move) velocities.move > -velocities.max_move ? velocities.move -= velocities.accel : -velocities.max_move
+    if (actions.left_move) velocities.lateral < velocities.max_move ? velocities.lateral += velocities.accel : velocities.max_move
+    if (actions.right_move) velocities.lateral > -velocities.max_move ? velocities.lateral -= velocities.accel : -velocities.max_move
 
     if (!actions.forward_move && !actions.backward_move){
-        if (speeds.move > 0) speeds.move -= speeds.accel_move
-        if (speeds.move < 0) speeds.move += speeds.accel_move
-        if (Math.abs(speeds.move) <= speeds.accel_move) speeds.move = 0
+        if (velocities.move > 0) velocities.move -= velocities.accel
+        if (velocities.move < 0) velocities.move += velocities.accel
+        if (Math.abs(velocities.move) <= velocities.accel) velocities.move = 0
     }
     if (!actions.left_move && !actions.right_move){
-        if (speeds.lateral > 0) speeds.lateral -= speeds.accel_move
-        if (speeds.lateral < 0) speeds.lateral += speeds.accel_move
-        if (Math.abs(speeds.lateral) <= speeds.accel_move) speeds.lateral = 0
+        if (velocities.lateral > 0) velocities.lateral -= velocities.accel
+        if (velocities.lateral < 0) velocities.lateral += velocities.accel
+        if (Math.abs(velocities.lateral) <= velocities.accel) velocities.lateral = 0
+    }
+    if (actions.up_move) position.z -= velocities.vertical
+    if (actions.down_move) position.z += velocities.vertical
+
+    ////////////////////// JUMPING //////////////////////
+    switch(jump.state){
+        case 'ascending':
+            jump.velocity += jump.accel
+            if (jump.velocity >= jump.max){
+                jump.state = 'descending'
+            }
+        break
+        case 'descending':
+            jump.velocity -= jump.accel
+            if (jump.velocity < 0){
+                jump.state = 'idle'
+            }
+        break
     }
 
-    if (actions.up_move) position.z -= speeds.vertical
-    if (actions.down_move) position.z += speeds.vertical
-
-    position.x += speeds.move * Math.sin(rotation.z) + speeds.lateral * Math.cos(rotation.z)
-    position.y += speeds.move * Math.cos(rotation.z) - speeds.lateral * Math.sin(rotation.z)
+    position.x += velocities.move * Math.sin(rotation.z) + velocities.lateral * Math.cos(rotation.z)
+    position.y += velocities.move * Math.cos(rotation.z) - velocities.lateral * Math.sin(rotation.z)
 }
 
 const applyTransforms = () => {
@@ -76,7 +101,7 @@ const applyTransforms = () => {
         rotateZ(${rotation.z}rad)
         translateX(${position.x}px)
         translateY(${position.y}px)
-        translateZ(${position.z}px)
+        translateZ(${position.z - jump.velocity}px)
     `
 
     scene_wrapper.style.transform = `rotateX(90deg)`
@@ -94,7 +119,7 @@ const applyTransforms = () => {
     hud.innerHTML = `
         <p>position.x : ${position.x.toFixed(3)}</p>
         <p>position.y : ${position.y.toFixed(3)}</p>
-        <p>position.z : ${position.z.toFixed(3)}</p>
+        <p>position.z : ${(position.z - jump.velocity).toFixed(3)}</p>
         <p>rotation.x : ${rotation.x.toFixed(3)}</p>
         <p>rotation.y : ${rotation.y.toFixed(3)}</p>
         <p>rotation.z : ${rotation.z.toFixed(3)}</p>
@@ -117,7 +142,7 @@ const crosshairScan = () => {
     if (crosshair_coords.x >= tree_coords.x && crosshair_coords.x <= tree_coords.x + tree_coords.h &&
         crosshair_coords.y >= tree_coords.y && crosshair_coords.y <= tree_coords.y + tree_coords.h
     ){
-        console.log("bruno !")
+        console.log('HIT !!!')
     }
 }
 
