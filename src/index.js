@@ -46,7 +46,7 @@ const initListeners = () => {
     })
 }
 
-const move = () => {
+const updatePosition = () => {
     if (actions.forward_move) speeds.move < speeds.max_move ? speeds.move += speeds.accel_move : speeds.max_move
     if (actions.backward_move) speeds.move > -speeds.max_move ? speeds.move -= speeds.accel_move : -speeds.max_move
     if (actions.left_move) speeds.lateral < speeds.max_move ? speeds.lateral += speeds.accel_move : speeds.max_move
@@ -68,15 +68,17 @@ const move = () => {
 
     position.x += speeds.move * Math.sin(rotation.z) + speeds.lateral * Math.cos(rotation.z)
     position.y += speeds.move * Math.cos(rotation.z) - speeds.lateral * Math.sin(rotation.z)
+}
 
+const applyTransforms = () => {
     scene.style.transform = `
-        rotateX(${rotation.x}rad)
-        rotateZ(${rotation.z}rad)
-        translateX(${position.x}px)
-        translateY(${position.y}px)
-        translateZ(${position.z}px)
-
+    rotateX(${rotation.x}rad)
+    rotateZ(${rotation.z}rad)
+    translateX(${position.x}px)
+    translateY(${position.y}px)
+    translateZ(${position.z}px)
     `
+
     scene_wrapper.style.transform = `
         rotateX(85deg)
     `
@@ -103,7 +105,8 @@ const move = () => {
 
 const loop = () => {
     requestAnimationFrame(loop)
-    move()
+    updatePosition()
+    applyTransforms()
 }
 
 initListeners()
