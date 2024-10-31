@@ -2,7 +2,6 @@ import { mouse, rotation, position, speeds, actions } from './vars.js'
 
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
-const camera = document.getElementById('camera')
 const hud = document.getElementById('hud')
 const tree = document.getElementById('tree')
 const tree2 = document.getElementById('tree2')
@@ -80,7 +79,7 @@ const applyTransforms = () => {
     `
 
     scene_wrapper.style.transform = `
-        rotateX(85deg)
+        rotateX(90deg)
     `
 
     tree.style.transform = `

@@ -13,7 +13,7 @@ export const rotation = {
 export const position = {
     x: 0,
     y: 0,
-    z: -10
+    z: -35
 }
 export const speeds = {
     rotate: .05,
