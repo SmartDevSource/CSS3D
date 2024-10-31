@@ -49,8 +49,8 @@ const initListeners = () => {
             case 'd': actions.right_move = true; break
             case 'z': actions.forward_move = true; break
             case 's': actions.backward_move = true; break
-            case '+': actions.up_move = true; break
-            case '-': actions.down_move = true; break
+            case ' ': actions.up_move = true; break
+            case 'control': actions.down_move = true; break
         }
     })
     window.addEventListener('keyup', e => {
@@ -59,8 +59,8 @@ const initListeners = () => {
             case 'd': actions.right_move = false; break
             case 'z': actions.forward_move = false; break
             case 's': actions.backward_move = false; break
-            case '+': actions.up_move = false; break
-            case '-': actions.down_move = false; break
+            case ' ': actions.up_move = false; break
+            case 'control': actions.down_move = false; break
         }
     })
     document.addEventListener('mousemove', e => {
