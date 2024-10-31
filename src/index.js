@@ -3,6 +3,7 @@ import { mouse, rotation, position, speeds, actions } from './vars.js'
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
 const hud = document.getElementById('hud')
+const crosshair = document.getElementById('crosshair')
 const tree = document.getElementById('tree')
 const tree2 = document.getElementById('tree2')
 
@@ -71,16 +72,14 @@ const updatePosition = () => {
 
 const applyTransforms = () => {
     scene.style.transform = `
-    rotateX(${rotation.x}rad)
-    rotateZ(${rotation.z}rad)
-    translateX(${position.x}px)
-    translateY(${position.y}px)
-    translateZ(${position.z}px)
+        rotateX(${rotation.x}rad)
+        rotateZ(${rotation.z}rad)
+        translateX(${position.x}px)
+        translateY(${position.y}px)
+        translateZ(${position.z}px)
     `
 
-    scene_wrapper.style.transform = `
-        rotateX(90deg)
-    `
+    scene_wrapper.style.transform = `rotateX(90deg)`
 
     tree.style.transform = `
         rotateZ(${-rotation.z}rad)
@@ -102,10 +101,31 @@ const applyTransforms = () => {
     `
 }
 
+const crosshairScan = () => {
+    const tree_coords = {
+        x: tree.getBoundingClientRect().x,
+        y: tree.getBoundingClientRect().y,
+        w: tree.getBoundingClientRect().width,
+        h: tree.getBoundingClientRect().height
+    }
+    const crosshair_coords = {
+        x: crosshair.getBoundingClientRect().x,
+        y: crosshair.getBoundingClientRect().y,
+        w: tree.getBoundingClientRect().width,
+        h: tree.getBoundingClientRect().height
+    }
+    if (crosshair_coords.x >= tree_coords.x && crosshair_coords.x <= tree_coords.x + tree_coords.h &&
+        crosshair_coords.y >= tree_coords.y && crosshair_coords.y <= tree_coords.y + tree_coords.h
+    ){
+        console.log("bruno !")
+    }
+}
+
 const loop = () => {
     requestAnimationFrame(loop)
     updatePosition()
     applyTransforms()
+    crosshairScan()
 }
 
 initListeners()
