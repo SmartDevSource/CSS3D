@@ -1,12 +1,13 @@
 import { mouse, rotation, position, 
-        velocities, actions, jump } from './vars.js'
+        velocities, actions, jump,
+        scene_objects } from './vars.js'
+
+import { Tree } from './objects/tree.js'
 
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
 const hud = document.getElementById('hud')
 const crosshair = document.getElementById('crosshair')
-const tree = document.getElementById('tree')
-const tree2 = document.getElementById('tree2')
 
 const initListeners = () => {
     window.addEventListener('click', () => {
@@ -106,15 +107,13 @@ const applyTransforms = () => {
 
     scene_wrapper.style.transform = `rotateX(90deg)`
 
-    tree.style.transform = `
-        rotateZ(${-rotation.z}rad)
-        rotateX(-90deg)
-    `
-
-    tree2.style.transform = `
-        rotateZ(${-rotation.z}rad)
-        rotateX(-90deg)
-    `
+    const trees = scene.querySelectorAll('.tree')
+    trees.forEach(tree => {
+        tree.style.transform = `
+            rotateZ(${-rotation.z}rad)
+            rotateX(-90deg)
+        `
+    })
 
     hud.innerHTML = `
         <p>position.x : ${position.x.toFixed(3)}</p>
@@ -126,31 +125,41 @@ const applyTransforms = () => {
     `
 }
 
-const crosshairScan = () => {
-    const tree_coords = {
-        x: tree.getBoundingClientRect().x,
-        y: tree.getBoundingClientRect().y,
-        w: tree.getBoundingClientRect().width,
-        h: tree.getBoundingClientRect().height
-    }
-    const crosshair_coords = {
-        x: crosshair.getBoundingClientRect().x,
-        y: crosshair.getBoundingClientRect().y,
-        w: tree.getBoundingClientRect().width,
-        h: tree.getBoundingClientRect().height
-    }
-    if (crosshair_coords.x >= tree_coords.x && crosshair_coords.x <= tree_coords.x + tree_coords.h &&
-        crosshair_coords.y >= tree_coords.y && crosshair_coords.y <= tree_coords.y + tree_coords.h
-    ){
-        console.log('HIT !!!')
-    }
+const crosshairScan = (scene_objects) => {
+    scene_objects.forEach(scene_object => {
+        const object_coords = {
+            x: scene_object.getBoundingClientRect().x,
+            y: scene_object.getBoundingClientRect().y,
+            w: scene_object.getBoundingClientRect().width,
+            h: scene_object.getBoundingClientRect().height
+        }
+        const crosshair_coords = {
+            x: crosshair.getBoundingClientRect().x,
+            y: crosshair.getBoundingClientRect().y,
+        }
+        if (crosshair_coords.x >= object_coords.x && crosshair_coords.x <= object_coords.x + object_coords.h &&
+            crosshair_coords.y >= object_coords.y && crosshair_coords.y <= object_coords.y + object_coords.h
+        ){
+            console.log('HIT !!!')
+        }
+        console.log("object_coords", object_coords)
+        console.log("crosshair_coords", crosshair_coords)
+    })
 }
+
+const tree_one = new Tree({position: {x: 100, y: -100, z: 20}})
+// const tree_two = new Tree({position: {x: 200, y: -100, z: 20}})
+
+scene_objects.push(tree_one.tree)
+scene_objects.forEach(scene_object => {
+    scene.appendChild(scene_object)
+})
 
 const loop = () => {
     requestAnimationFrame(loop)
     updatePosition()
     applyTransforms()
-    crosshairScan()
+    crosshairScan(scene_objects)
 }
 
 initListeners()

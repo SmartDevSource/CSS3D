@@ -44,12 +44,15 @@ body {
 }
 #tree-wrapper {
     position: absolute;
-    transform: translateY(-100px) translateZ(17px);
+    transform: translateY(-100px) translateZ(17px) translateX(50px);
 }
 #tree-wrapper-2 {
     position: absolute;
     transform: translateY(-200px) translateZ(17px);
 }
 #tree, #tree2 {
+    width: 50px;
+}
+.tree {
     width: 50px;
 }
