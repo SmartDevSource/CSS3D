@@ -1,43 +1,11 @@
+import { mouse, rotation, position, speeds, actions } from './vars.js'
+
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
 const camera = document.getElementById('camera')
 const hud = document.getElementById('hud')
 const tree = document.getElementById('tree')
 const tree2 = document.getElementById('tree2')
-
-const mouse = {
-    x: 0,
-    y: 0,
-    sens: .01
-}
-const rotation = {
-    x: 0,
-    y: 0,
-    z: 0
-}
-const position = {
-    x: 0,
-    y: 0,
-    z: -10
-}
-const speeds = {
-    rotate: .05,
-    move: .1,
-    lateral: .1,
-    max_move: 3,
-    accel_move: .1,
-    vertical: 1
-}
-const actions = {
-    rotate_left: false,
-    rotate_right: false,
-    left_move: false,
-    right_move: false,
-    forward_move: false,
-    backward_move: false,
-    up_move: false,
-    down_move: false
-}
 
 const initListeners = () => {
     window.addEventListener('click', () => {
@@ -69,6 +37,11 @@ const initListeners = () => {
             const speed_y = e.movementY * mouse.sens
             rotation.z -= speed_x
             rotation.x -= speed_y
+            if (rotation.x - speed_y < rotation.min_x){
+                rotation.x = rotation.min_x
+            } else if (rotation.x - speed_y > rotation.max_x){
+                rotation.x = rotation.max_x
+            }
         }
     })
 }
