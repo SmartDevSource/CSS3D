@@ -15,17 +15,6 @@ const crosshair_coords = {
     y: crosshair.getBoundingClientRect().top + crosshair.getBoundingClientRect().height / 2,
 }
 
-const tree_1 = new Tree({
-    position: {x: 0, y: 0, z: 40},
-    // position: {x: 250, y: 800, z: 40},
-    size: 100
-})
-
-scene_objects.push(tree_1.tree)
-scene_objects.forEach(scene_object => {
-    scene.appendChild(scene_object)
-})
-
 const initListeners = () => {
     window.addEventListener('click', () => {
         scene.requestPointerLock()
@@ -63,8 +52,7 @@ const initListeners = () => {
             } else if (rotation.x - speed_y > rotation.max_x){
                 rotation.x = rotation.max_x
             }
-            if (rotation.z > Math.PI * 2) rotation.z = 0
-            if (rotation.z < 0) rotation.z = Math.PI * 2
+            rotation.z = (rotation.z + Math.PI * 2) % (Math.PI * 2)
         }
     })
 }
@@ -136,8 +124,6 @@ const applyTransforms = () => {
             rotateZ(${-rotation.z}rad)
             rotateX(-90deg)
         `
-        crosshairScan(tree)
-
     })
 
     hud.innerHTML = `
@@ -153,34 +139,54 @@ const applyTransforms = () => {
     `
 }
 
-const crosshairScan = (scene_object) => {
-    const object_coords = {
-        left: scene_object.getBoundingClientRect().left,
-        right: scene_object.getBoundingClientRect().right,
-        top: scene_object.getBoundingClientRect().top,
-        bottom: scene_object.getBoundingClientRect().bottom
+const addObjects = () => {
+    for (let i = 0 ; i < 10 ; i++){
+        const tree = new Tree({
+            position: {x: i*50, y: i*50, z: 40},
+            size: 100
+        })
+        scene.appendChild(tree.dom_element)
+        scene_objects[tree.id] = tree
     }
+}
 
-    const ang = Math.atan2(
-        camera_position.y - tree_1.position.y,
-        camera_position.x - tree_1.position.x
-    )
-    console.log(ang)
-
-    if (crosshair_coords.x >= object_coords.left && 
-        crosshair_coords.x <= object_coords.right &&
-        crosshair_coords.y >= object_coords.top && 
-        crosshair_coords.y <= object_coords.bottom
-    ){
-        console.log('HIT !!!')
-    }
+const crosshairScan = () => {
+    const objects = document.querySelectorAll('.scene-object')
+    objects.forEach(object => {
+        const object_coords = {
+            left: object.getBoundingClientRect().left,
+            right: object.getBoundingClientRect().right,
+            top: object.getBoundingClientRect().top,
+            bottom: object.getBoundingClientRect().bottom
+        }
+        const angle_diff = Math.atan2(
+            scene_objects[object.id].position.y - absolute_position.y,
+            scene_objects[object.id].position.x - absolute_position.x
+        ) - rotation.z
+        const angle_normalized = Math.atan2(
+            Math.sin(angle_diff),
+            Math.cos(angle_diff)
+        )
+        if (crosshair_coords.x >= object_coords.left &&
+            crosshair_coords.x <= object_coords.right &&
+            crosshair_coords.y >= object_coords.top &&
+            crosshair_coords.y <= object_coords.bottom &&
+            angle_normalized > 0)
+        {
+            crosshair.style.color = 'red'
+        } else {
+            crosshair.style.color = 'blue'
+        }
+    })
 }
 
 const loop = () => {
     requestAnimationFrame(loop)
     updatePosition()
     applyTransforms()
+    crosshairScan()
 }
 
 initListeners()
+addObjects()
 loop()

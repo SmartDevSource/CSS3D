@@ -1,4 +1,4 @@
-export const scene_objects = []
+export const scene_objects = {}
 export const map_offset = {
     x: -390,
     y: 480,
