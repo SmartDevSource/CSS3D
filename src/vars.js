@@ -1,4 +1,8 @@
 export const scene_objects = {}
+export const current_target = {
+    id: null,
+    type: ''
+}
 export const map_offset = {
     x: -390,
     y: 480,

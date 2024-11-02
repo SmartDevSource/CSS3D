@@ -1,7 +1,7 @@
 import { mouse, rotation, camera_position, 
         velocities, actions, jump,
         scene_objects, absolute_position,
-        map_offset } from './vars.js'
+        map_offset, current_target } from './vars.js'
 
 import { Tree } from './objects/tree.js'
 
@@ -152,8 +152,9 @@ const addObjects = () => {
 
 const crosshairScan = () => {
     const objects = document.querySelectorAll('.scene-object')
-    let target_found = false
-
+    current_target.id = null
+    current_target.type = ''
+    
     objects.forEach(object => {
         const object_coords = {
             left: object.getBoundingClientRect().left,
@@ -175,10 +176,11 @@ const crosshairScan = () => {
             crosshair_coords.y <= object_coords.bottom &&
             angle_normalized > 0)
         {
-            target_found = true
+            current_target.id = object.id
         }
     })
-    if (target_found){
+    console.log(current_target)
+    if (current_target.id){
         crosshair.style.color = 'red'
     } else {
         crosshair.style.color = 'blue'
