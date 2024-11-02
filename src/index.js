@@ -152,6 +152,8 @@ const addObjects = () => {
 
 const crosshairScan = () => {
     const objects = document.querySelectorAll('.scene-object')
+    let target_found = false
+
     objects.forEach(object => {
         const object_coords = {
             left: object.getBoundingClientRect().left,
@@ -173,11 +175,14 @@ const crosshairScan = () => {
             crosshair_coords.y <= object_coords.bottom &&
             angle_normalized > 0)
         {
-            crosshair.style.color = 'red'
-        } else {
-            crosshair.style.color = 'blue'
+            target_found = true
         }
     })
+    if (target_found){
+        crosshair.style.color = 'red'
+    } else {
+        crosshair.style.color = 'blue'
+    }
 }
 
 const loop = () => {
