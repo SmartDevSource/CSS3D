@@ -1,18 +1,20 @@
-import { scene_objects } from './vars.js'
-
-import { Tree } from './objects/tree.js'
+import { SceneObject } from './objects/scene_object.js'
 import { Camera } from './engine_classes/camera.js'
+import { objects_data } from './data/objects_data.js'
 
 const scene = document.getElementById('scene')
 const scene_wrapper = document.getElementById('scene-wrapper')
 const hud = document.getElementById('hud')
 
+const scene_objects = {}
+let is_render_loaded = false
+
 const camera = new Camera({
     scene: scene, 
     position: {
-        x: 250,
-        y: -600,
-        z: -35
+        x: 0,
+        y: 0,
+        z: 0
     }
 })
 
@@ -42,35 +44,63 @@ const applyTransforms = () => {
     })
 
     hud.innerHTML = `
-        <p>css_position.x : ${camera.css_position.x.toFixed(3)}</p>
-        <p>css_position.y : ${camera.css_position.y.toFixed(3)}</p>
-        <p>css_position.z : ${(camera.css_position.z - camera.jump.velocity).toFixed(3)}</p>
-        <p>scene_position.x : ${camera.scene_position.x.toFixed(3)}</p>
-        <p>scene_position.y : ${camera.scene_position.y.toFixed(3)}</p>
-        <p>scene_position.z : ${(camera.scene_position.z - camera.jump.velocity).toFixed(3)}</p>
-        <p>rotation.x : ${camera.rotation.x.toFixed(3)}</p>
-        <p>rotation.y : ${camera.rotation.y.toFixed(3)}</p>
-        <p>rotation.z : ${camera.rotation.z.toFixed(3)}</p>
+        <p>
+            <span style="color: black">
+                css_position [x / y / z] :
+            </span>
+            <span style="color: purple">
+                ${camera.css_position.x.toFixed(3)} | 
+                ${camera.css_position.y.toFixed(3)} | 
+                ${(camera.css_position.z - camera.jump.velocity).toFixed(3)}
+            </span>
+        </p>
+        <p>
+            <span style="color: black">
+                scene_position [x / y / z] : 
+            </span>
+            <span style="color: purple">
+                ${camera.scene_position.x.toFixed(3)} | 
+                ${camera.scene_position.y.toFixed(3)} | 
+                ${(camera.scene_position.z - camera.jump.velocity).toFixed(3)}
+            </span>
+        </p>
+        <p>
+            <span style="color: black">
+                rotation [x / y / z] : 
+            </span>
+            <span style="color: purple">
+                ${camera.rotation.x.toFixed(3)} |  
+                ${camera.rotation.y.toFixed(3)} | 
+                ${camera.rotation.z.toFixed(3)}
+            </span>
+        </p>
     `
 }
 
-const addObjects = () => {
-    for (let i = 0 ; i < 10 ; i++){
-        const tree = new Tree({
-            position: {x: i*50, y: i*50, z: 40},
-            size: 100
+const loadObjects = async () => {
+    console.log(objects_data)
+
+    objects_data.forEach(object_data => {
+        const scene_object = new SceneObject({
+            position: object_data.position,
+            size: object_data.size,
+            object_type: object_data.type
         })
-        scene.appendChild(tree.dom_element)
-        scene_objects[tree.id] = tree
-    }
+        scene.appendChild(scene_object.dom_element)
+        scene_objects[scene_object.id] = scene_object
+    })
+
+    is_render_loaded = true
 }
 
 const loop = () => {
-    requestAnimationFrame(loop)
-    camera.update({scene_objects: scene_objects})
-    applyTransforms()
+    if (is_render_loaded){
+        requestAnimationFrame(loop)
+        camera.update({scene_objects: scene_objects})
+        applyTransforms()
+    }
 }
 
 initListeners()
-addObjects()
+loadObjects()
 loop()

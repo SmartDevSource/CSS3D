@@ -13,7 +13,7 @@ export class Crosshair {
         this.current_target.id = null
         this.current_target.type = ''
         
-        objects.forEach(object => {
+        objects.forEach((object, index) => {
             const object_coords = {
                 left: object.getBoundingClientRect().left,
                 right: object.getBoundingClientRect().right,
@@ -43,17 +43,18 @@ export class Crosshair {
                 this.crosshair_coords.x <= object_coords.right &&
                 this.crosshair_coords.y >= object_coords.top &&
                 this.crosshair_coords.y <= object_coords.bottom &&
-                horizontal_angle_normalized > 0 &&
-                vertical_angle_normalized > 0 && vertical_angle_normalized < .8)
+                horizontal_angle_normalized > 0)
+                // &&
+                // vertical_angle_normalized > 0 && vertical_angle_normalized < .8
             {
                 this.current_target.id = object.id
             }
         })
         // console.log(this.current_target)
-        if (this.current_target.id){
-            this.crosshair.style.color = 'red'
-        } else {
-            this.crosshair.style.color = 'blue'
-        }
+        // if (this.current_target.id){
+        //     this.crosshair.style.color = 'red'
+        // } else {
+        //     this.crosshair.style.color = 'blue'
+        // }
     }
 }

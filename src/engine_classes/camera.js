@@ -20,6 +20,7 @@ export class Camera {
             down_move: false
         }
         this.crosshair = new Crosshair()
+        this.toCSSCoords()
         this.initListeners()
     }
 
@@ -46,7 +47,7 @@ export class Camera {
                 case ' ': this.jump.is_active = false; break
             }
         })
-        document.addEventListener('mousemove', e => {
+        window.addEventListener('mousemove', e => {
             if (document.pointerLockElement === this.scene){
                 const speed_x = e.movementX * this.mouse.sens
                 const speed_y = e.movementY * this.mouse.sens
@@ -129,6 +130,12 @@ export class Camera {
         this.scene_position.x = -(this.css_position.x + this.map_offset.x)
         this.scene_position.y = this.css_position.y + this.map_offset.y
         this.scene_position.z = this.css_position.z + this.map_offset.z
+    }
+
+    toCSSCoords(){
+        this.css_position.x = (this.scene_position.x - this.map_offset.x)
+        this.css_position.y = this.scene_position.y - this.map_offset.y
+        this.css_position.z = this.scene_position.z - this.map_offset.z
     }
 
     handleJumpEvent = () => {
