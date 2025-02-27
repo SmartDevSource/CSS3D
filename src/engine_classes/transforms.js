@@ -20,7 +20,6 @@ export const applyTransforms = (camera, scene, scene_wrapper, scene_objects) => 
             `
         })
     })
-
 }
 
 export const drawHud = (hud, camera) => {
