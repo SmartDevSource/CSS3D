@@ -34,6 +34,9 @@ body {
     perspective: 460px;
     background-color: rgb(168, 237, 254);
 }
+#scene {
+    max-height: 960px;
+}
 #camera { 
     position: relative;
     left: 0px;

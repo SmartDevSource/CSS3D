@@ -1,10 +1,21 @@
 import { Crosshair } from "./crosshair.js"
 
+const CAMERA_OFFSET = {x: 0, y: 960}
+
+const getComputedPosition = (camera_position) => {
+    return {
+        x: CAMERA_OFFSET.x - camera_position.x,
+        y: CAMERA_OFFSET.y - camera_position.y
+    }
+}
+
 export class Camera {
-    constructor({scene, position}){
+    constructor({scene, camera_position}){
+        const computed_position = getComputedPosition(camera_position)
+
         this.scene = scene
-        this.css_position = position
-        this.scene_position = {x: 0, y: 0, z:0}
+        this.css_position = camera_position
+        this.scene_position = {x: computed_position.x, y: computed_position.y, z: 0}
         this.rotation = {x: 0, y: 0, z: 0, min_x: -1.3, max_x: .8}
         this.map_offset = {x: -390, y: 480, z: 35}
         this.velocities = {move: .1, lateral: .1, max_move: 2, accel: .1, vertical: 1}
@@ -62,7 +73,7 @@ export class Camera {
             }
         })
     }
-    update({scene_objects}){
+    update(scene_objects){
         if (this.actions.forward_move) {
             this.velocities.move < this.velocities.max_move ? 
             this.velocities.move += this.velocities.accel : 

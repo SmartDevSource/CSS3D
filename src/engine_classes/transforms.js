@@ -1,4 +1,4 @@
-export const applyTransforms = (camera, scene, scene_wrapper) => {
+export const applyTransforms = (camera, scene, scene_wrapper, scene_objects) => {
     scene.style.transform = `
         rotateX(${camera.rotation.x}rad)
         rotateZ(${camera.rotation.z}rad)
@@ -9,13 +9,18 @@ export const applyTransforms = (camera, scene, scene_wrapper) => {
 
     scene_wrapper.style.transform = `rotateX(90deg)`
 
-    const trees = scene.querySelectorAll('.tree')
-    trees.forEach(tree => {
-        tree.style.transform = `
-            rotateZ(${-camera.rotation.z}rad)
-            rotateX(-90deg)
-        `
+    const object_types = [...new Set(Object.values(scene_objects).map(obj => obj.object_type))]
+
+    object_types.forEach(object_type => {
+        const objects = scene.querySelectorAll(`.${object_type}`)
+        objects.forEach(object => {
+            object.style.transform = `
+                rotateZ(${-camera.rotation.z}rad)
+                rotateX(-90deg)
+            `
+        })
     })
+
 }
 
 export const drawHud = (hud, camera) => {

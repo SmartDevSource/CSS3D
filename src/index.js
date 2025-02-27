@@ -8,7 +8,7 @@ const hud = document.getElementById('hud')
 
 const scene_objects = {}
 const scene_status = {loaded: false}
-const camera = new Camera({scene: scene, position: {x: 0, y: 0, z: 0}})
+const camera = new Camera({scene: scene, camera_position: {x: 200, y: 200, z: 0}})
 
 const initialize = async () => {
     window.addEventListener('click', () => {
@@ -25,10 +25,10 @@ const initialize = async () => {
 }
 
 const loop = () => {
-    requestAnimationFrame(loop)
-    camera.update({scene_objects: scene_objects})
-    applyTransforms(camera, scene, scene_wrapper)
+    camera.update(scene_objects)
+    applyTransforms(camera, scene, scene_wrapper, scene_objects)
     drawHud(hud, camera)
+    requestAnimationFrame(loop)
 }
 
 initialize()
